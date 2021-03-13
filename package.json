@@ -1,0 +1,23 @@
+{
+  "name": "vutter-api",
+  "version": "1.0.0",
+  "description": "é um simples repositório para gerenciar ferramentas com seus respectivos nomes, links, descrições e tags.",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+		"lint": "npx standard src"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/andersongns/vutter-api.git"
+  },
+  "author": "Anderson Santos <anderson.santos@tuta.io> (https://andersongns.github.io/)",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/andersongns/vutter-api/issues"
+  },
+  "homepage": "https://github.com/andersongns/vutter-api#readme",
+  "devDependencies": {
+    "standard": "^16.0.3"
+  }
+}
