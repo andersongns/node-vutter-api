@@ -1,5 +1,5 @@
 const { tools: { getToolsUseCase } } = require('../../../../src/domain/usecases')
-const { MissingParamError } = require('../../../../src/utils/errors')
+const { MissingDependenceError } = require('../../../../src/utils/errors')
 
 const { mockGetTools } = require('./mocks')
 
@@ -21,7 +21,7 @@ describe('Get Tools UseCase', () => {
   test('Should throws if invalid dependencies are provided', async () => {
     const invalid = {}
     const sut = getToolsUseCase(invalid)
-    expect(sut.getTools()).rejects.toThrow(new MissingParamError('getToolsRepository'))
+    expect(sut.getTools()).rejects.toThrow(new MissingDependenceError('getToolsRepository'))
   })
 
   test('Should return a tools list', async () => {
