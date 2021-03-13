@@ -8,6 +8,8 @@
     "lint:staged": "lint-staged",
     "lint:fix": "npm run lint -- --fix",
     "test": "jest --colors --noStackTrace --passWithNoTests --runInBand",
+    "test:dev": "npm test -- --watch",
+    "test:staged": "npm test -- --findRelatedTests --silent",
     "prepare": "husky install"
   },
   "repository": {
