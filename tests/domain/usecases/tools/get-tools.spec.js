@@ -3,7 +3,7 @@ const { MissingDependenceError } = require('../../../../src/utils/errors')
 
 const { mockGetTools } = require('./mocks')
 
-const getToolsRepositorySpy = () => {
+const toolsRepositorySpy = () => {
   const get = jest.fn().mockReturnValue(mockGetTools)
   return {
     get
@@ -11,21 +11,21 @@ const getToolsRepositorySpy = () => {
 }
 
 const makeSut = () => {
-  const getToolsRepository = getToolsRepositorySpy()
+  const toolsRepository = toolsRepositorySpy()
   return {
-    sut: getToolsUseCase({ getToolsRepository }),
-    getToolsRepositorySpy: getToolsRepository
+    sut: getToolsUseCase({ toolsRepository }),
+    toolsRepositorySpy: toolsRepository
   }
 }
 describe('Get Tools UseCase', () => {
   test('Should throws if invalid dependencies are provided', async () => {
     const invalid = {}
     const sut = getToolsUseCase(invalid)
-    expect(sut.getTools()).rejects.toThrow(new MissingDependenceError('getToolsRepository'))
+    expect(sut.getTools()).rejects.toThrow(new MissingDependenceError('toolsRepository'))
   })
 
   test('Should return a tools list', async () => {
-    const { sut, getToolsRepositorySpy } = makeSut()
+    const { sut, toolsRepositorySpy } = makeSut()
     const tools = await sut.getTools()
 
     const keys = [
@@ -36,7 +36,7 @@ describe('Get Tools UseCase', () => {
       'tags'
     ]
 
-    expect(getToolsRepositorySpy.get).toHaveBeenCalled()
+    expect(toolsRepositorySpy.get).toHaveBeenCalled()
     expect(tools).toBeTruthy()
     expect(tools.length).toBe(3)
     expect(tools).toEqual(mockGetTools)
@@ -44,10 +44,10 @@ describe('Get Tools UseCase', () => {
   })
 
   test('Should return a empty tools list', async () => {
-    const { sut, getToolsRepositorySpy } = makeSut()
-    getToolsRepositorySpy.get = jest.fn().mockReturnValue([])
+    const { sut, toolsRepositorySpy } = makeSut()
+    toolsRepositorySpy.get = jest.fn().mockReturnValue([])
     const tools = await sut.getTools()
-    expect(getToolsRepositorySpy.get).toHaveBeenCalled()
+    expect(toolsRepositorySpy.get).toHaveBeenCalled()
     expect(tools).toBeTruthy()
     expect(tools.length).toBe(0)
     expect(tools).toEqual([])

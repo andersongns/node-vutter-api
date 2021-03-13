@@ -1,8 +1,8 @@
 const { errors: { MissingDependenceError } } = require('../../../utils')
-const getToolsUseCase = ({ getToolsRepository }) => {
+const getToolsUseCase = ({ toolsRepository }) => {
   const getTools = async () => {
-    if (!getToolsRepository) throw new MissingDependenceError('getToolsRepository')
-    const tools = await getToolsRepository.get()
+    if (!toolsRepository) throw new MissingDependenceError('toolsRepository')
+    const tools = await toolsRepository.get()
     return tools
   }
 
