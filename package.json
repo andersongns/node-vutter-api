@@ -5,7 +5,10 @@
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-		"lint": "npx standard src"
+    "lint": "standard src",
+    "lint:staged": "lint-staged",
+    "lint:fix": "npm run lint -- --fix",
+    "prepare": "husky install"
   },
   "repository": {
     "type": "git",
@@ -18,6 +21,8 @@
   },
   "homepage": "https://github.com/andersongns/vutter-api#readme",
   "devDependencies": {
+    "husky": "^5.1.3",
+    "lint-staged": "^10.5.4",
     "standard": "^16.0.3"
   }
 }
