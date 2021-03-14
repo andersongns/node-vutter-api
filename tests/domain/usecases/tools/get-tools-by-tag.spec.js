@@ -18,7 +18,7 @@ const makeSut = () => {
   }
 }
 
-describe('Get Tools UseCase', () => {
+describe('Get Tools By Tag UseCase', () => {
   test('Should throws if invalid dependencies are provided', async () => {
     const invalid = {}
     const sut = getToolsByTagUseCase(invalid)
