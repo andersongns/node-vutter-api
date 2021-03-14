@@ -1,7 +1,7 @@
-const getToolsUseCase = require('./get-tools')
-const getToolsByTagUseCase = require('./get-tools-by-tag')
-const addToolsUseCase = require('./add-tools')
-const deleteToolsByIdUseCase = require('./delete-tools-by-id')
+const getToolsUseCase = require('./get-tools-usecase')
+const getToolsByTagUseCase = require('./get-tools-by-tag-usecase')
+const addToolsUseCase = require('./add-tools-usecase')
+const deleteToolsByIdUseCase = require('./delete-tools-by-id-usecase')
 
 module.exports = {
   addToolsUseCase,
