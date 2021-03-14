@@ -3,5 +3,6 @@
 
 module.exports = {
   coverageDirectory: 'coverage',
-  testEnvironment: 'node'
+  testEnvironment: 'node',
+  preset: '@shelf/jest-mongodb'
 }
