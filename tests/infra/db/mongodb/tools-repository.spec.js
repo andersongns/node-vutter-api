@@ -107,7 +107,7 @@ describe('Unit Tools Repository ', () => {
         'tags'
       ]
 
-      const tags = faker.lorem.words(5).split(' ')
+      const tags = ['any_tag']
 
       await Promise.all([
         toolsRepository.add({
