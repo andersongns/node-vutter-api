@@ -1,5 +1,5 @@
 const { tools: { addToolsUseCase } } = require('../../../../src/domain/usecases')
-const { MissingDependenceError, MissingParamError } = require('../../../../src/utils/errors')
+const { errors: { MissingDependenceError, MissingParamError } } = require('../../../../src/utils')
 
 const { mockAddTools } = require('./mocks')
 

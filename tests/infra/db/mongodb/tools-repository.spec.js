@@ -2,7 +2,7 @@ const faker = require('faker')
 const { mongoHelper } = require('../../../../src/infra/db/mongodb/helpers')
 const { toolsRepository } = require('../../../../src/infra/db/mongodb')
 const { ObjectId } = require('mongodb')
-const { InvalidParamError } = require('../../../../src/utils/errors')
+const { errors: { InvalidParamError } } = require('../../../../src/utils')
 
 describe('Unit Tools Repository ', () => {
   let toolsCollection

@@ -1,5 +1,5 @@
 const { tools: { deleteToolsByIdUseCase } } = require('../../../../src/domain/usecases')
-const { MissingDependenceError, MissingParamError } = require('../../../../src/utils/errors')
+const { errors: { MissingDependenceError, MissingParamError } } = require('../../../../src/utils')
 
 const toolsRepositorySpy = () => {
   const deleteById = jest.fn(() => true)
