@@ -86,13 +86,13 @@ describe('Unit Tools Repository ', () => {
         })
       ])
 
-      const result = await toolsRepository.getTools()
+      const result = await toolsRepository.get()
       expect(result.length).toBe(2)
       props.forEach((prop) => expect(result[0]).toHaveProperty(prop))
     })
 
     test('Should return an empty array when no has data in database', async () => {
-      const result = await toolsRepository.getTools()
+      const result = await toolsRepository.get()
       expect(result.length).toBe(0)
     })
   })
@@ -124,13 +124,13 @@ describe('Unit Tools Repository ', () => {
         })
       ])
 
-      const result = await toolsRepository.getToolsByTag(tags[0])
+      const result = await toolsRepository.getByTag(tags[0])
       expect(result.length).toBe(1)
       props.forEach((prop) => expect(result[0]).toHaveProperty(prop))
     })
 
     test('Should return an empty array when no has data in database', async () => {
-      const result = await toolsRepository.getToolsByTag('any_value')
+      const result = await toolsRepository.getByTag('any_value')
       expect(result.length).toBe(0)
     })
   })

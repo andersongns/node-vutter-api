@@ -16,13 +16,13 @@ const deleteById = async (id) => {
   return result.deletedCount === 1
 }
 
-const getToolsByTag = async (tag) => {
+const getByTag = async (tag) => {
   const toolsCollection = await mongoHelper.getCollection(COLLECTION_NAME)
   const tools = await toolsCollection.find({ tags: { $in: [tag] } }).toArray()
   return mongoHelper.parserCollection(tools)
 }
 
-const getTools = async () => {
+const get = async () => {
   const toolsCollection = await mongoHelper.getCollection(COLLECTION_NAME)
   const tools = await toolsCollection.find().toArray()
   return mongoHelper.parserCollection(tools)
@@ -31,7 +31,7 @@ const getTools = async () => {
 module.exports = {
   add,
   deleteById,
-  getToolsByTag,
-  getTools,
+  getByTag,
+  get,
   COLLECTION_NAME
 }
