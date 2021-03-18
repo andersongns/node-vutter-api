@@ -1,4 +1,4 @@
-const { tools: { deleteToolsByIdRouter } } = require('../../../../src/presentation/routers')
+const { deleteToolsByIdRouter } = require('../../../../src/presentation/routers/tools')
 const { errors: { MissingDependenceError, MissingParamError } } = require('../../../../src/utils')
 const faker = require('faker')
 
