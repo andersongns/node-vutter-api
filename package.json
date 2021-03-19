@@ -9,7 +9,7 @@
     "lint:staged": "lint-staged",
     "lint:fix": "npm run lint -- --fix",
     "test": "jest --colors --noStackTrace --passWithNoTests --runInBand",
-    "test:dev": "npm test -- --watch",
+    "test:unit": "npm test -- --watch -c jest-unit.config.js",
     "test:staged": "npm test -- --findRelatedTests --silent",
     "test:ci": "npm test -- --coverage --silent --verbose",
     "prepare": "husky install"
