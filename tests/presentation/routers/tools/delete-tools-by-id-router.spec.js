@@ -1,5 +1,5 @@
 const { deleteToolsByIdRouter } = require('../../../../src/presentation/routers/tools')
-const { errors: { MissingDependenceError, MissingParamError } } = require('../../../../src/utils')
+const { errors: { MissingDependenceError, DependenceNotFoundError, MissingParamError } } = require('../../../../src/utils')
 const faker = require('faker')
 
 const deleteToolsByIdUseCaseSpy = () => {
@@ -44,13 +44,25 @@ describe('Delete Tools By Id Router', () => {
     expect(httpResponse.body).toBeFalsy()
   })
 
+  test('Should return 404 when not found id', async () => {
+    const params = {
+      id: faker.random.uuid()
+    }
+    const { sut, deleteToolsByIdUseCase } = makeSut()
+    deleteToolsByIdUseCase.deleteById = () => Promise.resolve(false)
+    const httpRequest = { params }
+    const httpResponse = await sut.route(httpRequest)
+    expect(httpResponse.statusCode).toBe(404)
+    expect(httpResponse.body.error).toBe(`${params.id} not found`)
+  })
+
   test('Should return 500 when no dependencies is provided throws', async () => {
     const params = {}
     const sut = deleteToolsByIdRouter({ })
     const httpRequest = { params }
     const httpResponse = await sut.route(httpRequest)
     expect(httpResponse.statusCode).toBe(500)
-    expect(httpResponse.body.error).toBe(new MissingDependenceError('deleteToolsByIdUseCase').message)
+    expect(httpResponse.body.error).toBe(new DependenceNotFoundError().message)
   })
 
   test('Should return 500 when deleteToolsByIdUseCase throws', async () => {
@@ -60,6 +72,15 @@ describe('Delete Tools By Id Router', () => {
     const httpResponse = await sut.route(httpRequest)
     expect(httpResponse.statusCode).toBe(500)
     expect(httpResponse.body.error).toBe(new Error('mock').message)
+  })
+
+  test('Should return 500 when deleteToolsByIdUseCase throws', async () => {
+    const params = {}
+    const sut = deleteToolsByIdRouter({ deleteToolsByIdUseCase: {} })
+    const httpRequest = { params }
+    const httpResponse = await sut.route(httpRequest)
+    expect(httpResponse.statusCode).toBe(500)
+    expect(httpResponse.body.error).toBe(new MissingDependenceError('deleteToolsByIdUseCase').message)
   })
 
   test('Should return 400 when MissingParamError throws', async () => {

@@ -1,5 +1,5 @@
 const { getToolsRouter } = require('../../../../src/presentation/routers/tools')
-const { errors: { MissingDependenceError } } = require('../../../../src/utils')
+const { errors: { DependenceNotFoundError, MissingDependenceError } } = require('../../../../src/utils')
 const faker = require('faker')
 
 const getToolsByTagUseCaseSpy = () => {
@@ -107,26 +107,46 @@ describe('Get Tools Router', () => {
     const httpRequest = { query }
     const httpResponse = await sut.route(httpRequest)
     expect(httpResponse.statusCode).toBe(500)
-    expect(httpResponse.body.error).toBe(new MissingDependenceError('getToolsUseCase').message)
+    expect(httpResponse.body.error).toBe(new DependenceNotFoundError().message)
   })
 
   test('Should return 500 when getToolsUseCase throws', async () => {
     const query = {}
-    const sut = getToolsRouter({ getToolsUseCase: getToolsUseCaseSpyError(), getToolsByTagUseCase: {} })
+    const sut = getToolsRouter({ getToolsUseCase: getToolsUseCaseSpyError(), getToolsByTagUseCase: getToolsByTagUseCaseSpy() })
     const httpRequest = { query }
     const httpResponse = await sut.route(httpRequest)
     expect(httpResponse.statusCode).toBe(500)
     expect(httpResponse.body.error).toBe(new Error('mock').message)
+  })
+
+  test('Should return 500 when getToolsUseCase no has getTools', async () => {
+    const query = {}
+    const sut = getToolsRouter({ getToolsUseCase: {}, getToolsByTagUseCase: getToolsByTagUseCaseSpy() })
+    const httpRequest = { query }
+    const httpResponse = await sut.route(httpRequest)
+    expect(httpResponse.statusCode).toBe(500)
+    expect(httpResponse.body.error).toBe(new MissingDependenceError('getToolsUseCase').message)
   })
 
   test('Should return 500 when getToolsByTagUseCase throws', async () => {
     const query = {
       tag: faker.random.word()
     }
-    const sut = getToolsRouter({ getToolsUseCase: {}, getToolsByTagUseCase: getToolsByTagUseCaseSpyError() })
+    const sut = getToolsRouter({ getToolsUseCase: getToolsUseCaseSpy(), getToolsByTagUseCase: getToolsByTagUseCaseSpyError() })
     const httpRequest = { query }
     const httpResponse = await sut.route(httpRequest)
     expect(httpResponse.statusCode).toBe(500)
     expect(httpResponse.body.error).toBe(new Error('mock').message)
+  })
+
+  test('Should return 500 when getToolsByTagUseCase no has getToolsByTag', async () => {
+    const query = {
+      tag: faker.random.word()
+    }
+    const sut = getToolsRouter({ getToolsUseCase: getToolsUseCaseSpy(), getToolsByTagUseCase: {} })
+    const httpRequest = { query }
+    const httpResponse = await sut.route(httpRequest)
+    expect(httpResponse.statusCode).toBe(500)
+    expect(httpResponse.body.error).toBe(new MissingDependenceError('getToolsByTagUseCase').message)
   })
 })
