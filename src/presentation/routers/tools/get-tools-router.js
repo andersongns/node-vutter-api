@@ -1,11 +1,12 @@
 const { httpResponse } = require('../../helpers')
-const { errors: { MissingDependenceError } } = require('../../../../src/utils')
+const { errors: { MissingDependenceError, DependenceNotFoundError } } = require('../../../../src/utils')
 
 const getToolsRouter = ({ getToolsByTagUseCase, getToolsUseCase }) => {
   const route = async (httpRequest) => {
     try {
-      if (!getToolsUseCase) throw new MissingDependenceError('getToolsUseCase')
-      if (!getToolsByTagUseCase) throw new MissingDependenceError('getToolsByTagUseCase')
+      if (!getToolsUseCase || !getToolsByTagUseCase) throw new DependenceNotFoundError()
+      if (!Object.keys(getToolsUseCase).length) throw new MissingDependenceError('getToolsUseCase')
+      if (!Object.keys(getToolsByTagUseCase).length) throw new MissingDependenceError('getToolsByTagUseCase')
       const { tag } = httpRequest.query
       let tools = []
       if (tag) {
