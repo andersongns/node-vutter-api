@@ -1,5 +1,5 @@
 {
-  "name": "vutter-api",
+  "name": "vuttr-api",
   "version": "1.0.0",
   "description": "é um simples repositório para gerenciar ferramentas com seus respectivos nomes, links, descrições e tags.",
   "main": "index.js",
@@ -11,23 +11,26 @@
     "test": "jest --colors --noStackTrace --passWithNoTests --runInBand",
     "test:dev": "npm test -- --watch",
     "test:staged": "npm test -- --findRelatedTests --silent",
-    "test:ci": "npm test -- --coverage --silent",
+    "test:ci": "npm test -- --coverage --silent --verbose",
     "prepare": "husky install"
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/andersongns/vutter-api.git"
+    "url": "git+https://github.com/andersongns/vuttr-api.git"
   },
   "author": "Anderson Santos <anderson.santos@tuta.io> (https://andersongns.github.io/)",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/andersongns/vutter-api/issues"
+    "url": "https://github.com/andersongns/vuttr-api/issues"
   },
-  "homepage": "https://github.com/andersongns/vutter-api#readme",
+  "homepage": "https://github.com/andersongns/vuttr-api#readme",
   "standard": {
     "env": [
       "jest"
     ]
+  },
+  "engines": {
+    "node": "14.x"
   },
   "devDependencies": {
     "@shelf/jest-mongodb": "^1.2.3",
