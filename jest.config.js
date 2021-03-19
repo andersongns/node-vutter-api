@@ -4,11 +4,14 @@
 module.exports = {
   coverageDirectory: 'coverage',
   testEnvironment: 'node',
+  collectCoverageFrom: ['**/src/**/*.js', '!**/src/main/**'],
   preset: '@shelf/jest-mongodb',
   coverageThreshold: {
-    branches: 90,
-    functions: 90,
-    lines: 90,
-    statements: -10
+    global: {
+      branches: 90,
+      functions: 90,
+      lines: 90,
+      statements: -10
+    }
   }
 }
