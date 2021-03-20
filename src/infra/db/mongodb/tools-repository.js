@@ -12,7 +12,7 @@ const add = async (tool) => {
 const deleteById = async (id) => {
   if (!mongoHelper.isObjectId(id)) throw new InvalidParamError('id')
   const toolsCollection = await mongoHelper.getCollection(COLLECTION_NAME)
-  const result = await toolsCollection.deleteOne({ _id: id })
+  const result = await toolsCollection.deleteOne({ _id: mongoHelper.toObjectId(id) })
   return result.deletedCount === 1
 }
 
