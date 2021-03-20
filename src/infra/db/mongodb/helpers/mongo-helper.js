@@ -34,5 +34,8 @@ module.exports = {
 
   isObjectId (id) {
     return ObjectId.isValid(id)
+  },
+  toObjectId (id) {
+    return ObjectId(id)
   }
 }
