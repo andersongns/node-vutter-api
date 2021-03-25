@@ -6,6 +6,7 @@ module.exports = {
   testEnvironment: 'node',
   collectCoverageFrom: ['**/src/**/*.js', '!**/src/main/**'],
   preset: '@shelf/jest-mongodb',
+  bail: 1,
   coverageThreshold: {
     global: {
       branches: 90,
