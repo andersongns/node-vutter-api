@@ -1,12 +1,16 @@
 const {
-  addToolsUseCase, deleteToolsByIdUseCase, getToolsUseCase, getToolsByTagUseCase
-} = require('../../../domain/usecases/tools')
+  AddToolsUseCase, DeleteToolsByIdUseCase, GetToolsUseCase, GetToolsByTagUseCase
+} = require('../../../domain/tools')
 
-const mongodb = require('../../../infra/db/mongodb')
+const { ToolsRepository } = require('../../../infra/db/mongodb')
+
+const dependencies = {
+  toolsRepository: ToolsRepository
+}
 
 module.exports = {
-  addToolsUseCase: addToolsUseCase(mongodb),
-  deleteToolsByIdUseCase: deleteToolsByIdUseCase(mongodb),
-  getToolsUseCase: getToolsUseCase(mongodb),
-  getToolsByTagUseCase: getToolsByTagUseCase(mongodb)
+  addToolsUseCase: new AddToolsUseCase(dependencies),
+  deleteToolsByIdUseCase: new DeleteToolsByIdUseCase(dependencies),
+  getToolsUseCase: new GetToolsUseCase(dependencies),
+  getToolsByTagUseCase: new GetToolsByTagUseCase(dependencies)
 }

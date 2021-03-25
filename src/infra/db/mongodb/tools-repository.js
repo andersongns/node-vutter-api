@@ -1,37 +1,30 @@
-const { mongoHelper } = require('../mongodb/helpers')
+const { MongoHelper } = require('../mongodb/helpers')
 const { InvalidParamError } = require('../../../utils/errors')
 
 const COLLECTION_NAME = 'tools'
+module.exports = class ToolsRepository {
+  static async add (tool) {
+    const toolsCollection = await MongoHelper.getCollection(COLLECTION_NAME)
+    const { ops } = await toolsCollection.insertOne(tool)
+    return MongoHelper.parserItem(ops.find(Boolean))
+  }
 
-const add = async (tool) => {
-  const toolsCollection = await mongoHelper.getCollection(COLLECTION_NAME)
-  const { ops } = await toolsCollection.insertOne(tool)
-  return mongoHelper.parserItem(ops.find(Boolean))
-}
+  static async deleteById (id) {
+    if (!MongoHelper.isObjectId(id)) throw new InvalidParamError('id')
+    const toolsCollection = await MongoHelper.getCollection(COLLECTION_NAME)
+    const result = await toolsCollection.deleteOne({ _id: MongoHelper.toObjectId(id) })
+    return result.deletedCount === 1
+  }
 
-const deleteById = async (id) => {
-  if (!mongoHelper.isObjectId(id)) throw new InvalidParamError('id')
-  const toolsCollection = await mongoHelper.getCollection(COLLECTION_NAME)
-  const result = await toolsCollection.deleteOne({ _id: mongoHelper.toObjectId(id) })
-  return result.deletedCount === 1
-}
+  static async getByTag (tag) {
+    const toolsCollection = await MongoHelper.getCollection(COLLECTION_NAME)
+    const tools = await toolsCollection.find({ tags: { $in: [tag] } }).toArray()
+    return MongoHelper.parserCollection(tools)
+  }
 
-const getByTag = async (tag) => {
-  const toolsCollection = await mongoHelper.getCollection(COLLECTION_NAME)
-  const tools = await toolsCollection.find({ tags: { $in: [tag] } }).toArray()
-  return mongoHelper.parserCollection(tools)
-}
-
-const get = async () => {
-  const toolsCollection = await mongoHelper.getCollection(COLLECTION_NAME)
-  const tools = await toolsCollection.find().toArray()
-  return mongoHelper.parserCollection(tools)
-}
-
-module.exports = {
-  add,
-  deleteById,
-  getByTag,
-  get,
-  COLLECTION_NAME
+  static async get () {
+    const toolsCollection = await MongoHelper.getCollection(COLLECTION_NAME)
+    const tools = await toolsCollection.find().toArray()
+    return MongoHelper.parserCollection(tools)
+  }
 }

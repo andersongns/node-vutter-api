@@ -1,8 +1,8 @@
-const { addToolsRouter, deleteToolsByIdRouter, getToolsRouter } = require('../../../presentation/routers/tools')
+const { AddToolsRouter, DeleteToolsByIdRouter, GetToolsRouter } = require('../../../presentation/routers/tools')
 const usecases = require('../usecases/tools-usecase-factory')
 
 module.exports = {
-  addToolsRouter: addToolsRouter(usecases),
-  deleteToolsByIdRouter: deleteToolsByIdRouter(usecases),
-  getToolsRouter: getToolsRouter(usecases)
+  addToolsRouter: new AddToolsRouter(usecases),
+  deleteToolsByIdRouter: new DeleteToolsByIdRouter(usecases),
+  getToolsRouter: new GetToolsRouter(usecases)
 }

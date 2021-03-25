@@ -1,5 +1,5 @@
-const mongoHelper = require('./mongo-helper')
+const MongoHelper = require('./mongo-helper')
 
 module.exports = {
-  mongoHelper
+  MongoHelper
 }

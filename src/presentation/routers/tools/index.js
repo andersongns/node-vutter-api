@@ -1,9 +1,9 @@
-const addToolsRouter = require('./add-tools-router')
-const deleteToolsByIdRouter = require('./delete-tools-by-id-router')
-const getToolsRouter = require('./get-tools-router')
+const AddToolsRouter = require('./add-tools-router')
+const DeleteToolsByIdRouter = require('./delete-tools-by-id-router')
+const GetToolsRouter = require('./get-tools-router')
 
 module.exports = {
-  addToolsRouter,
-  deleteToolsByIdRouter,
-  getToolsRouter
+  AddToolsRouter,
+  DeleteToolsByIdRouter,
+  GetToolsRouter
 }

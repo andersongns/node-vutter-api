@@ -1,65 +1,57 @@
-const ok = (body) => {
-  return {
-    statusCode: 200,
-    body
-  }
-}
-
-const created = (body) => {
-  return {
-    statusCode: 201,
-    body
-  }
-}
-
-const noContent = () => {
-  return {
-    statusCode: 204
-  }
-}
-
-const badRequest = (error) => {
-  return {
-    statusCode: 400,
-    body: {
-      error: error?.message
+module.exports = class HttpResponse {
+  static ok (body) {
+    return {
+      statusCode: 200,
+      body
     }
   }
-}
 
-const notFound = (error) => {
-  return {
-    statusCode: 404,
-    body: {
-      error: error?.message
+  static created (body) {
+    return {
+      statusCode: 201,
+      body
     }
   }
-}
 
-const unauthorizedError = (error) => {
-  return {
-    statusCode: 401,
-    body: {
-      error: error?.message
+  static noContent () {
+    return {
+      statusCode: 204
     }
   }
-}
 
-const serverError = (error) => {
-  return {
-    statusCode: error?.statusCode || 500,
-    body: {
-      error: error?.message
+  static badRequest (error) {
+    return {
+      statusCode: 400,
+      body: {
+        error: error?.message
+      }
     }
   }
-}
 
-module.exports = {
-  ok,
-  created,
-  noContent,
-  notFound,
-  badRequest,
-  unauthorizedError,
-  serverError
+  static notFound (error) {
+    return {
+      statusCode: 404,
+      body: {
+        error: error?.message
+      }
+    }
+  }
+
+  static unauthorizedError (error) {
+    return {
+      statusCode: 401,
+      body: {
+        error: error?.message
+      }
+    }
+  }
+
+  static serverError (error) {
+    return {
+      statusCode: error?.statusCode || 500,
+      body: {
+        error: error?.message
+      }
+    }
+  }
 }

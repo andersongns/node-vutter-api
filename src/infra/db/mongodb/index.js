@@ -1,5 +1,5 @@
-const toolsRepository = require('./tools-repository')
+const ToolsRepository = require('./tools-repository')
 
 module.exports = {
-  toolsRepository
+  ToolsRepository
 }

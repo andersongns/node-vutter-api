@@ -1,19 +1,19 @@
-const { httpResponse } = require('../../helpers')
-const { errors: { MissingDependenceError } } = require('../../../../src/utils')
+const { HttpResponse } = require('../../helpers')
+const { MissingDependenceError, DependenceNotFoundError } = require('../../../utils/errors')
 
-const getToolsByTagRouter = ({ addToolsUseCase }) => {
-  const route = async (httpRequest) => {
+module.exports = class GetToolsByTagRouter {
+  constructor ({ addToolsUseCase }) {
+    if (!addToolsUseCase) throw new DependenceNotFoundError()
+    if (!Object.keys(addToolsUseCase).length) throw new MissingDependenceError('addToolsUseCase')
+    this.addToolsUseCase = addToolsUseCase
+  }
+
+  async route (httpRequest) {
     try {
-      if (!addToolsUseCase) throw new MissingDependenceError('addToolsUseCase')
-      const tool = await addToolsUseCase.add(httpRequest.body)
-      return httpResponse.created(tool)
+      const tool = await this.addToolsUseCase.add(httpRequest.body)
+      return HttpResponse.created(tool)
     } catch (error) {
-      return httpResponse.serverError(error)
+      return HttpResponse.serverError(error)
     }
   }
-  return {
-    route
-  }
 }
-
-module.exports = getToolsByTagRouter

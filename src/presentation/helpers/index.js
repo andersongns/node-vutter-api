@@ -1,5 +1,5 @@
-const httpResponse = require('./http-response')
+const HttpResponse = require('./http-response')
 
 module.exports = {
-  httpResponse
+  HttpResponse
 }

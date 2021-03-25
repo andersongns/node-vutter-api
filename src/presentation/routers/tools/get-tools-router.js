@@ -1,27 +1,27 @@
-const { httpResponse } = require('../../helpers')
-const { errors: { MissingDependenceError, DependenceNotFoundError } } = require('../../../../src/utils')
+const { HttpResponse } = require('../../helpers')
+const { MissingDependenceError, DependenceNotFoundError } = require('../../../utils/errors')
 
-const getToolsRouter = ({ getToolsByTagUseCase, getToolsUseCase }) => {
-  const route = async (httpRequest) => {
+module.exports = class GetToolsRouter {
+  constructor ({ getToolsByTagUseCase, getToolsUseCase }) {
+    if (!getToolsUseCase || !getToolsByTagUseCase) throw new DependenceNotFoundError()
+    if (!Object.keys(getToolsUseCase).length) throw new MissingDependenceError('getToolsUseCase')
+    if (!Object.keys(getToolsByTagUseCase).length) throw new MissingDependenceError('getToolsByTagUseCase')
+    this.getToolsByTagUseCase = getToolsByTagUseCase
+    this.getToolsUseCase = getToolsUseCase
+  }
+
+  async route (httpRequest) {
     try {
-      if (!getToolsUseCase || !getToolsByTagUseCase) throw new DependenceNotFoundError()
-      if (!Object.keys(getToolsUseCase).length) throw new MissingDependenceError('getToolsUseCase')
-      if (!Object.keys(getToolsByTagUseCase).length) throw new MissingDependenceError('getToolsByTagUseCase')
       const { tag } = httpRequest.query
       let tools = []
       if (tag) {
-        tools = await getToolsByTagUseCase.getToolsByTag(tag)
+        tools = await this.getToolsByTagUseCase.getToolsByTag(tag)
       } else {
-        tools = await getToolsUseCase.getTools()
+        tools = await this.getToolsUseCase.getTools()
       }
-      return httpResponse.ok(tools)
+      return HttpResponse.ok(tools)
     } catch (error) {
-      return httpResponse.serverError(error)
+      return HttpResponse.serverError(error)
     }
   }
-  return {
-    route
-  }
 }
-
-module.exports = getToolsRouter

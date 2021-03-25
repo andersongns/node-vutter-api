@@ -1,22 +1,21 @@
-const { httpResponse } = require('../../helpers')
-const { errors: { MissingDependenceError, DependenceNotFoundError } } = require('../../../../src/utils')
+const { HttpResponse } = require('../../helpers')
+const { MissingDependenceError, DependenceNotFoundError } = require('../../../utils/errors')
 
-const getToolsByTagRouter = ({ deleteToolsByIdUseCase }) => {
-  const route = async (httpRequest) => {
+module.exports = class GetToolsByTagRouter {
+  constructor ({ deleteToolsByIdUseCase }) {
+    if (!deleteToolsByIdUseCase) throw new DependenceNotFoundError()
+    if (!Object.keys(deleteToolsByIdUseCase).length) throw new MissingDependenceError('deleteToolsByIdUseCase')
+    this.deleteToolsByIdUseCase = deleteToolsByIdUseCase
+  }
+
+  async route (httpRequest) {
     try {
-      if (!deleteToolsByIdUseCase) throw new DependenceNotFoundError()
-      if (!Object.keys(deleteToolsByIdUseCase).length) throw new MissingDependenceError('deleteToolsByIdUseCase')
       const { id } = httpRequest.params
-      const isDeleted = await deleteToolsByIdUseCase.deleteById(id)
-      if (isDeleted) return httpResponse.noContent()
-      return httpResponse.notFound({ message: `${id} not found` })
+      const isDeleted = await this.deleteToolsByIdUseCase.deleteById(id)
+      if (isDeleted) return HttpResponse.noContent()
+      return HttpResponse.notFound({ message: `${id} not found` })
     } catch (error) {
-      return httpResponse.serverError(error)
+      return HttpResponse.serverError(error)
     }
   }
-  return {
-    route
-  }
 }
-
-module.exports = getToolsByTagRouter
