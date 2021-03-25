@@ -1,5 +1,5 @@
-const { deleteToolsByIdRouter } = require('../../../../src/presentation/routers/tools')
-const { errors: { MissingDependenceError, DependenceNotFoundError, MissingParamError } } = require('../../../../src/utils')
+const { DeleteToolsByIdRouter } = require('../../../../src/presentation/routers/tools')
+const { MissingDependenceError, DependenceNotFoundError, MissingParamError } = require('../../../../src/utils/errors')
 const faker = require('faker')
 
 const deleteToolsByIdUseCaseSpy = () => {
@@ -24,7 +24,7 @@ const deleteToolsByIdUseCaseSpyError = () => {
 
 const makeSut = () => {
   const deleteToolsByIdUseCase = deleteToolsByIdUseCaseSpy()
-  const sut = deleteToolsByIdRouter({ deleteToolsByIdUseCase })
+  const sut = new DeleteToolsByIdRouter({ deleteToolsByIdUseCase })
 
   return {
     deleteToolsByIdUseCase,
@@ -57,17 +57,12 @@ describe('Delete Tools By Id Router', () => {
   })
 
   test('Should return 500 when no dependencies is provided throws', async () => {
-    const params = {}
-    const sut = deleteToolsByIdRouter({ })
-    const httpRequest = { params }
-    const httpResponse = await sut.route(httpRequest)
-    expect(httpResponse.statusCode).toBe(500)
-    expect(httpResponse.body.error).toBe(new DependenceNotFoundError().message)
+    expect(() => new DeleteToolsByIdRouter({ })).toThrow(new DependenceNotFoundError())
   })
 
   test('Should return 500 when deleteToolsByIdUseCase throws', async () => {
     const params = {}
-    const sut = deleteToolsByIdRouter({ deleteToolsByIdUseCase: deleteToolsByIdUseCaseSpyError() })
+    const sut = new DeleteToolsByIdRouter({ deleteToolsByIdUseCase: deleteToolsByIdUseCaseSpyError() })
     const httpRequest = { params }
     const httpResponse = await sut.route(httpRequest)
     expect(httpResponse.statusCode).toBe(500)
@@ -75,12 +70,8 @@ describe('Delete Tools By Id Router', () => {
   })
 
   test('Should return 500 when deleteToolsByIdUseCase throws', async () => {
-    const params = {}
-    const sut = deleteToolsByIdRouter({ deleteToolsByIdUseCase: {} })
-    const httpRequest = { params }
-    const httpResponse = await sut.route(httpRequest)
-    expect(httpResponse.statusCode).toBe(500)
-    expect(httpResponse.body.error).toBe(new MissingDependenceError('deleteToolsByIdUseCase').message)
+    const dependencies = { deleteToolsByIdUseCase: {} }
+    expect(() => new DeleteToolsByIdRouter(dependencies)).toThrow(new MissingDependenceError('deleteToolsByIdUseCase'))
   })
 
   test('Should return 400 when MissingParamError throws', async () => {

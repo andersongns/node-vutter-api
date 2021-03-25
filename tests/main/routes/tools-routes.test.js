@@ -1,14 +1,14 @@
 const request = require('supertest')
 const app = require('../../../src/main/config/app')
-const { mongoHelper } = require('../../../src/infra/db/mongodb/helpers')
-const { toolsRepository } = require('../../../src/infra/db/mongodb')
+const { MongoHelper } = require('../../../src/infra/db/mongodb/helpers')
+const { ToolsRepository } = require('../../../src/infra/db/mongodb')
 let toolsCollection
 
 const COLLECTION_NAME = 'tools'
 describe('Login Routes', () => {
   beforeAll(async () => {
-    await mongoHelper.connect(process.env.MONGO_URL)
-    toolsCollection = await mongoHelper.getCollection(COLLECTION_NAME)
+    await MongoHelper.connect(process.env.MONGO_URL)
+    toolsCollection = await MongoHelper.getCollection(COLLECTION_NAME)
   })
 
   beforeEach(async () => {
@@ -16,7 +16,7 @@ describe('Login Routes', () => {
   })
 
   afterAll(async () => {
-    await mongoHelper.disconnect()
+    await MongoHelper.disconnect()
   })
 
   test('/POST tools', (done) => {
@@ -47,7 +47,7 @@ describe('Login Routes', () => {
   })
 
   test('/GET tools', async (done) => {
-    await toolsRepository.add({
+    await ToolsRepository.add({
       title: 'hotel',
       link: 'https://github.com/typicode/hotel',
       description: 'Local app manager. Start apps within your browser, developer tool with local .localhost domain and https out of the box.',
@@ -92,7 +92,7 @@ describe('Login Routes', () => {
     ]
 
     tools.forEach(async tool => {
-      await toolsRepository.add(tool)
+      await ToolsRepository.add(tool)
     })
 
     request(app)

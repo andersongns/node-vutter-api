@@ -1,27 +1,25 @@
-const { tools: { getToolsUseCase } } = require('../../../../src/domain/usecases')
-const { errors: { MissingDependenceError } } = require('../../../../src/utils')
+const { GetToolsUseCase } = require('../../../src/domain/tools')
+const { ToolsRepository } = require('../../../src/infra/db/mongodb')
+const { MissingDependenceError } = require('../../../src/utils/errors')
 
 const { mockGetTools } = require('./mocks')
 
-const toolsRepositorySpy = () => {
-  const get = jest.fn().mockReturnValue(mockGetTools)
-  return {
-    get
-  }
+const createDependencies = () => {
+  ToolsRepository.get = jest.fn().mockReturnValue(mockGetTools)
+  return ToolsRepository
 }
 
 const makeSut = () => {
-  const toolsRepository = toolsRepositorySpy()
+  const toolsRepository = createDependencies()
   return {
-    sut: getToolsUseCase({ toolsRepository }),
+    sut: new GetToolsUseCase({ toolsRepository }),
     toolsRepositorySpy: toolsRepository
   }
 }
 describe('Get Tools UseCase', () => {
   test('Should throws if invalid dependencies are provided', async () => {
     const invalid = {}
-    const sut = getToolsUseCase(invalid)
-    expect(sut.getTools()).rejects.toThrow(new MissingDependenceError('toolsRepository'))
+    expect(() => new GetToolsUseCase(invalid)).toThrow(new MissingDependenceError('toolsRepository'))
   })
 
   test('Should return a tools list', async () => {

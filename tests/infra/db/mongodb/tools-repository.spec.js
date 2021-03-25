@@ -1,14 +1,15 @@
 const faker = require('faker')
-const { mongoHelper } = require('../../../../src/infra/db/mongodb/helpers')
-const { toolsRepository } = require('../../../../src/infra/db/mongodb')
+const { MongoHelper } = require('../../../../src/infra/db/mongodb/helpers')
+const { ToolsRepository } = require('../../../../src/infra/db/mongodb')
 const { ObjectId } = require('mongodb')
-const { errors: { InvalidParamError } } = require('../../../../src/utils')
+const { InvalidParamError } = require('../../../../src/utils/errors')
+const COLLECTION_NAME = 'tools'
 
 describe('Unit Tools Repository ', () => {
   let toolsCollection
   beforeAll(async () => {
-    await mongoHelper.connect(process.env.MONGO_URL)
-    toolsCollection = await mongoHelper.getCollection(toolsRepository.COLLECTION_NAME)
+    await MongoHelper.connect(process.env.MONGO_URL)
+    toolsCollection = await MongoHelper.getCollection(COLLECTION_NAME)
   })
 
   beforeEach(async () => {
@@ -16,7 +17,7 @@ describe('Unit Tools Repository ', () => {
   })
 
   afterAll(async () => {
-    await mongoHelper.disconnect()
+    await MongoHelper.disconnect()
   })
 
   describe('add tool', () => {
@@ -28,7 +29,7 @@ describe('Unit Tools Repository ', () => {
         'description',
         'tags'
       ]
-      const result = await toolsRepository.add({
+      const result = await ToolsRepository.add({
         title: faker.random.word(),
         link: faker.internet.domainName(),
         description: faker.lorem.paragraph(1),
@@ -40,23 +41,23 @@ describe('Unit Tools Repository ', () => {
 
   describe('Delete By Id', () => {
     test('Should return true if delete with success', async () => {
-      const tool = await toolsRepository.add({
+      const tool = await ToolsRepository.add({
         title: faker.random.word(),
         link: faker.internet.domainName(),
         description: faker.lorem.paragraph(1),
         tags: faker.lorem.words(5).split(' ')
       })
-      const result = await toolsRepository.deleteById(tool.id)
+      const result = await ToolsRepository.deleteById(tool.id)
       expect(result).toBe(true)
     })
 
     test('Should throws if invalid id if provided', async () => {
-      const result = toolsRepository.deleteById('any_value')
+      const result = ToolsRepository.deleteById('any_value')
       expect(result).rejects.toThrow(new InvalidParamError('id'))
     })
 
     test('Should return false if id not exists', async () => {
-      const result = await toolsRepository.deleteById(ObjectId())
+      const result = await ToolsRepository.deleteById(ObjectId())
       expect(result).toBe(false)
     })
   })
@@ -72,13 +73,13 @@ describe('Unit Tools Repository ', () => {
       ]
 
       await Promise.all([
-        toolsRepository.add({
+        ToolsRepository.add({
           title: faker.random.word(),
           link: faker.internet.domainName(),
           description: faker.lorem.paragraph(1),
           tags: faker.lorem.words(5).split(' ')
         }),
-        toolsRepository.add({
+        ToolsRepository.add({
           title: faker.random.word(),
           link: faker.internet.domainName(),
           description: faker.lorem.paragraph(1),
@@ -86,13 +87,13 @@ describe('Unit Tools Repository ', () => {
         })
       ])
 
-      const result = await toolsRepository.get()
+      const result = await ToolsRepository.get()
       expect(result.length).toBe(2)
       props.forEach((prop) => expect(result[0]).toHaveProperty(prop))
     })
 
     test('Should return an empty array when no has data in database', async () => {
-      const result = await toolsRepository.get()
+      const result = await ToolsRepository.get()
       expect(result.length).toBe(0)
     })
   })
@@ -110,13 +111,13 @@ describe('Unit Tools Repository ', () => {
       const tags = ['any_tag']
 
       await Promise.all([
-        toolsRepository.add({
+        ToolsRepository.add({
           title: faker.random.word(),
           link: faker.internet.domainName(),
           description: faker.lorem.paragraph(1),
           tags
         }),
-        toolsRepository.add({
+        ToolsRepository.add({
           title: faker.random.word(),
           link: faker.internet.domainName(),
           description: faker.lorem.paragraph(1),
@@ -124,13 +125,13 @@ describe('Unit Tools Repository ', () => {
         })
       ])
 
-      const result = await toolsRepository.getByTag(tags[0])
+      const result = await ToolsRepository.getByTag(tags[0])
       expect(result.length).toBe(1)
       props.forEach((prop) => expect(result[0]).toHaveProperty(prop))
     })
 
     test('Should return an empty array when no has data in database', async () => {
-      const result = await toolsRepository.getByTag('any_value')
+      const result = await ToolsRepository.getByTag('any_value')
       expect(result.length).toBe(0)
     })
   })

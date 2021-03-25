@@ -1,17 +1,16 @@
-const { tools: { deleteToolsByIdUseCase } } = require('../../../../src/domain/usecases')
-const { errors: { MissingDependenceError, MissingParamError } } = require('../../../../src/utils')
+const { DeleteToolsByIdUseCase } = require('../../../src/domain/tools')
+const { ToolsRepository } = require('../../../src/infra/db/mongodb')
+const { MissingDependenceError, MissingParamError } = require('../../../src/utils/errors')
 
-const toolsRepositorySpy = () => {
-  const deleteById = jest.fn(() => true)
-  return {
-    deleteById
-  }
+const createDependencies = () => {
+  ToolsRepository.deleteById = jest.fn(() => true)
+  return ToolsRepository
 }
 
 const makeSut = () => {
-  const toolsRepository = toolsRepositorySpy()
+  const toolsRepository = createDependencies()
   return {
-    sut: deleteToolsByIdUseCase({ toolsRepository }),
+    sut: new DeleteToolsByIdUseCase({ toolsRepository }),
     toolsRepositorySpy: toolsRepository
   }
 }
@@ -19,8 +18,7 @@ const makeSut = () => {
 describe('Delete Tools By Id UseCase', () => {
   test('Should throws if invalid dependencies are provided', async () => {
     const invalid = {}
-    const sut = deleteToolsByIdUseCase(invalid)
-    expect(sut.deleteById()).rejects.toThrow(new MissingDependenceError('toolsRepository'))
+    expect(() => new DeleteToolsByIdUseCase(invalid)).toThrow(new MissingDependenceError('toolsRepository'))
   })
 
   test('Should throws if id is not provided', async () => {

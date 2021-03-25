@@ -1,19 +1,18 @@
-const { tools: { getToolsByTagUseCase } } = require('../../../../src/domain/usecases')
-const { errors: { MissingDependenceError, MissingParamError } } = require('../../../../src/utils')
+const { GetToolsByTagUseCase } = require('../../../src/domain/tools')
+const { ToolsRepository } = require('../../../src/infra/db/mongodb')
+const { MissingDependenceError, MissingParamError } = require('../../../src/utils/errors')
 
 const { mockGetToolsByTag } = require('./mocks')
 
-const toolsRepositorySpy = () => {
-  const getByTag = jest.fn().mockReturnValue(mockGetToolsByTag)
-  return {
-    getByTag
-  }
+const createDependencies = () => {
+  ToolsRepository.getByTag = jest.fn().mockReturnValue(mockGetToolsByTag)
+  return ToolsRepository
 }
 
 const makeSut = () => {
-  const toolsRepository = toolsRepositorySpy()
+  const toolsRepository = createDependencies()
   return {
-    sut: getToolsByTagUseCase({ toolsRepository }),
+    sut: new GetToolsByTagUseCase({ toolsRepository }),
     toolsRepositorySpy: toolsRepository
   }
 }
@@ -21,8 +20,7 @@ const makeSut = () => {
 describe('Get Tools By Tag UseCase', () => {
   test('Should throws if invalid dependencies are provided', async () => {
     const invalid = {}
-    const sut = getToolsByTagUseCase(invalid)
-    expect(sut.getToolsByTag()).rejects.toThrow(new MissingDependenceError('toolsRepository'))
+    expect(() => new GetToolsByTagUseCase(invalid)).toThrow(new MissingDependenceError('toolsRepository'))
   })
 
   test('Should throws if no params is provided', async () => {

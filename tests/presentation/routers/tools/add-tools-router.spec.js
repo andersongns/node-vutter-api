@@ -1,5 +1,5 @@
-const { addToolsRouter } = require('../../../../src/presentation/routers/tools')
-const { errors: { MissingDependenceError, MissingParamError } } = require('../../../../src/utils')
+const { AddToolsRouter } = require('../../../../src/presentation/routers/tools')
+const { MissingDependenceError, DependenceNotFoundError, MissingParamError } = require('../../../../src/utils/errors')
 const faker = require('faker')
 
 const addToolsUseCaseSpy = () => {
@@ -27,7 +27,7 @@ const addToolsUseCaseSpyError = () => {
 
 const makeSut = () => {
   const addToolsUseCase = addToolsUseCaseSpy()
-  const sut = addToolsRouter({ addToolsUseCase })
+  const sut = new AddToolsRouter({ addToolsUseCase })
 
   return {
     addToolsUseCase,
@@ -55,17 +55,16 @@ describe('Add Tools Router', () => {
   })
 
   test('Should return 500 when no dependencies is provided throws', async () => {
-    const body = {}
-    const sut = addToolsRouter({ })
-    const httpRequest = { body }
-    const httpResponse = await sut.route(httpRequest)
-    expect(httpResponse.statusCode).toBe(500)
-    expect(httpResponse.body.error).toBe(new MissingDependenceError('addToolsUseCase').message)
+    expect(() => new AddToolsRouter({ })).toThrow(new DependenceNotFoundError())
+  })
+
+  test('Should return 500 when no addToolsUseCase is provided throws', async () => {
+    expect(() => new AddToolsRouter({ addToolsUseCase: {} })).toThrow(new MissingDependenceError('addToolsUseCase'))
   })
 
   test('Should return 500 when addToolsUseCase throws', async () => {
     const body = {}
-    const sut = addToolsRouter({ addToolsUseCase: addToolsUseCaseSpyError() })
+    const sut = new AddToolsRouter({ addToolsUseCase: addToolsUseCaseSpyError() })
     const httpRequest = { body }
     const httpResponse = await sut.route(httpRequest)
     expect(httpResponse.statusCode).toBe(500)
