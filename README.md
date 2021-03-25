@@ -1,7 +1,7 @@
 # VUTTR (Very Useful Tools to Remember)
 [![JavaScript Style Guide](https://img.shields.io/badge/code_style-standard-brightgreen.svg)](https://standardjs.com)
 [![Build Status](https://travis-ci.com/andersongns/node-vuttr-api.svg?branch=main)](https://travis-ci.com/andersongns/node-vuttr-api)
-
+![Coveralls](https://img.shields.io/coveralls/github/andersongns/node-vuttr-api)
 # How to install
 
 1. `npm i`
