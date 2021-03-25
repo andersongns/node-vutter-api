@@ -6,7 +6,6 @@ module.exports = class GetToolsUseCase {
   }
 
   async getTools () {
-    if (!this.toolsRepository) throw new MissingDependenceError('toolsRepository')
     const tools = await this.toolsRepository.get()
     return tools
   }
