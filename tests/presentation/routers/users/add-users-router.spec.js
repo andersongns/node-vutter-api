@@ -59,7 +59,7 @@ describe('Add Tools Router', () => {
     expect(() => new AddUserRouter({ })).toThrow(new DependenceNotFoundError())
   })
 
-  test('Should return 500 when addToolsUseCase throws', async () => {
+  test('Should return 500 when addUsersUseCase throws', async () => {
     const body = {}
     const sut = new AddUserRouter({ addUserUseCase: addUsersUseCaseSpyError() })
     const httpRequest = { body }
