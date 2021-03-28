@@ -17,7 +17,7 @@ module.exports = class AuthenticationUseCase {
     const isValid = await this.hashGenerator.verify(password, user.password)
     if (!isValid) throw new UnauthorizedError()
 
-    const token = await this.tokenJwtGenerator.generate(user.id)
+    const token = await this.tokenJwtGenerator.generate({ id: user.id })
     const { id, name } = user
     await this.usersRepository.updateById(id, { token })
     return {

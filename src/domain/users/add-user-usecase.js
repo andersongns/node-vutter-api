@@ -17,12 +17,12 @@ module.exports = class AddUserUseCase {
 
     const hasUserByEmail = await this.usersRepository.findByEmail(email)
     if (hasUserByEmail?.email) throw new DuplicatedKeyError('email')
-    const hashPassword = this.hashGenerator.generate(password)
+    const hashPassword = await this.hashGenerator.generate(password)
     const { id } = await this.usersRepository.add({
       ...user,
       password: hashPassword
     })
-    const token = await this.tokenJwtGenerator.generate(id)
+    const token = await this.tokenJwtGenerator.generate({ id })
 
     return {
       id, name, token
