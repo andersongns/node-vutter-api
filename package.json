@@ -4,7 +4,7 @@
   "description": "é um simples repositório para gerenciar ferramentas com seus respectivos nomes, links, descrições e tags.",
   "main": "index.js",
   "scripts": {
-    "start": "node src/main",
+    "start": "node src/main/index.js",
     "lint": "standard src tests",
     "lint:staged": "lint-staged",
     "lint:fix": "npm run lint -- --fix",
