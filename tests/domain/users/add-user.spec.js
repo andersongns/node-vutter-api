@@ -1,5 +1,5 @@
 const { AddUserUseCase } = require('../../../src/domain/users')
-const { DependenceNotFoundError, MissingParamError, DuplicatedKeyError } = require('../../../src/utils/errors')
+const { DependenceNotFoundError, MissingParamError, DuplicatedKeyError, InvalidParamError } = require('../../../src/utils/errors')
 
 const { mockAddUser } = require('./mocks')
 
@@ -10,11 +10,13 @@ const makeSut = () => {
   }
   const tokenJwtGenerator = { generate: jest.fn(() => 'any_token_jwt_generator') }
   const hashGenerator = { generate: jest.fn(() => 'any_hash_generator') }
+  const validator = { isEmailValid: jest.fn(() => true) }
   return {
-    sut: new AddUserUseCase({ usersRepository, tokenJwtGenerator, hashGenerator }),
+    sut: new AddUserUseCase({ usersRepository, tokenJwtGenerator, hashGenerator, validator }),
     usersRepository,
     tokenJwtGenerator,
-    hashGenerator
+    hashGenerator,
+    validator
   }
 }
 
@@ -42,6 +44,16 @@ describe('Add User UseCase', () => {
       name
     } = mockAddUser
     expect(sut.add({ name })).rejects.toThrow(new MissingParamError('email'))
+  })
+
+  test('Should throws if invalid email is provided', async () => {
+    const { sut, validator } = makeSut()
+    validator.isEmailValid = jest.fn(() => false)
+    const email = 'invalid_email'
+    const {
+      name
+    } = mockAddUser
+    expect(sut.add({ name, email })).rejects.toThrow(new InvalidParamError('email'))
   })
 
   test('Should throws if password is not provided', async () => {

@@ -1,5 +1,5 @@
 const { AuthenticationUseCase } = require('../../../src/domain/authentication')
-const { DependenceNotFoundError, MissingParamError, UnauthorizedError } = require('../../../src/utils/errors')
+const { DependenceNotFoundError, MissingParamError, UnauthorizedError, InvalidParamError } = require('../../../src/utils/errors')
 
 const makeSut = () => {
   const usersRepository = {
@@ -8,11 +8,13 @@ const makeSut = () => {
   }
   const tokenJwtGenerator = { generate: jest.fn(() => 'any_token_jwt_generator') }
   const hashGenerator = { verify: jest.fn(() => true) }
+  const validator = { isEmailValid: jest.fn(() => true) }
   return {
-    sut: new AuthenticationUseCase({ usersRepository, tokenJwtGenerator, hashGenerator }),
+    sut: new AuthenticationUseCase({ usersRepository, tokenJwtGenerator, hashGenerator, validator }),
     usersRepository,
     tokenJwtGenerator,
-    hashGenerator
+    hashGenerator,
+    validator
   }
 }
 
@@ -21,7 +23,8 @@ describe('Authentication UseCase', () => {
     const dependencies = [
       {},
       { usersRepository: { findByEmail () { } } },
-      { usersRepository: { findByEmail () { } }, tokenJwtGenerator: { generate () { } } }
+      { usersRepository: { findByEmail () { } }, tokenJwtGenerator: { generate () { } } },
+      { usersRepository: { findByEmail () { } }, tokenJwtGenerator: { generate () { } }, hashGenerator: { generate () { } } }
     ]
     dependencies.forEach(dependence => {
       expect(() => new AuthenticationUseCase(dependence)).toThrow(new DependenceNotFoundError())
@@ -31,6 +34,12 @@ describe('Authentication UseCase', () => {
   test('Should throws if no email is provided', async () => {
     const { sut } = makeSut()
     expect(sut.auth()).rejects.toThrow(new MissingParamError('email'))
+  })
+
+  test('Should throws if invalid email is provided', async () => {
+    const { sut, validator } = makeSut()
+    validator.isEmailValid = jest.fn(() => false)
+    expect(sut.auth('invalid_email')).rejects.toThrow(new InvalidParamError('email'))
   })
 
   test('Should throws if password is not provided', async () => {
