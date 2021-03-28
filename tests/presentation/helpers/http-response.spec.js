@@ -18,9 +18,19 @@ describe('Unit HttpResponse', () => {
     expect(response).toStrictEqual({ statusCode: 400, body: { error: 'BAD_REQUEST' } })
   })
 
+  test('badRequest', () => {
+    const response = HttpResponse.badRequest({ })
+    expect(response).toStrictEqual({ statusCode: 400, body: { error: 'Bad request' } })
+  })
+
   test('unauthorizedError', () => {
     const response = HttpResponse.unauthorizedError({ message: 'UNAUTHORIZED' })
     expect(response).toStrictEqual({ statusCode: 401, body: { error: 'UNAUTHORIZED' } })
+  })
+
+  test('unauthorizedError without message', () => {
+    const response = HttpResponse.unauthorizedError({ })
+    expect(response).toStrictEqual({ statusCode: 401, body: { error: 'Unauthorized' } })
   })
   test('serverError', () => {
     const response = HttpResponse.serverError({ message: 'SERVER_ERROR' })

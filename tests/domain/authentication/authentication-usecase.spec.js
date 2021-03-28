@@ -7,7 +7,7 @@ const makeSut = () => {
     updateById: jest.fn()
   }
   const tokenJwtGenerator = { generate: jest.fn(() => 'any_token_jwt_generator') }
-  const hashGenerator = { generate: jest.fn(() => 'any_hash_generator') }
+  const hashGenerator = { verify: jest.fn(() => true) }
   return {
     sut: new AuthenticationUseCase({ usersRepository, tokenJwtGenerator, hashGenerator }),
     usersRepository,
@@ -61,5 +61,12 @@ describe('Authentication UseCase', () => {
       'name',
       'token'
     ])
+  })
+
+  test('Should auth with invalid password', async () => {
+    const { sut, hashGenerator } = makeSut()
+    hashGenerator.verify = jest.fn(() => false)
+    const promise = sut.auth('any_email@email.com', 'any_password')
+    expect(promise).rejects.toThrow(new UnauthorizedError())
   })
 })
