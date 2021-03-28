@@ -24,8 +24,9 @@ module.exports = class MongoHelper {
   }
 
   static parserItem (data) {
+    if (!data) return
     const { _id, ...rest } = data
-    return { id: _id, ...rest }
+    return { id: _id.toString(), ...rest }
   }
 
   static parserCollection (collection) {
