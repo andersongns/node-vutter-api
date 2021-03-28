@@ -1,11 +1,12 @@
 const { AddUserUseCase } = require('../../../domain/users')
 const { UserRepository } = require('../../../infra/db/mongodb')
-const { hashBcryptGeneratorFactory, tokenJwtGeneratorFactory } = require('../helpers')
+const { hashBcryptGeneratorFactory, tokenJwtGeneratorFactory, validatorFactory } = require('../helpers')
 
 const dependencies = {
   usersRepository: UserRepository,
   hashGenerator: hashBcryptGeneratorFactory,
-  tokenJwtGenerator: tokenJwtGeneratorFactory
+  tokenJwtGenerator: tokenJwtGeneratorFactory,
+  validator: validatorFactory
 }
 
 module.exports = {

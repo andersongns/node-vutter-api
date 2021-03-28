@@ -1,11 +1,12 @@
-const { DependenceNotFoundError, MissingParamError, DuplicatedKeyError } = require('../../utils/errors')
+const { DependenceNotFoundError, MissingParamError, DuplicatedKeyError, InvalidParamError } = require('../../utils/errors')
 
 module.exports = class AddUserUseCase {
-  constructor ({ usersRepository, tokenJwtGenerator, hashGenerator }) {
-    if (!usersRepository || !tokenJwtGenerator || !hashGenerator) throw new DependenceNotFoundError()
+  constructor ({ usersRepository, tokenJwtGenerator, hashGenerator, validator }) {
+    if (!usersRepository || !tokenJwtGenerator || !hashGenerator || !validator) throw new DependenceNotFoundError()
     this.usersRepository = usersRepository
     this.tokenJwtGenerator = tokenJwtGenerator
     this.hashGenerator = hashGenerator
+    this.validator = validator
   }
 
   async add (user) {
@@ -13,6 +14,7 @@ module.exports = class AddUserUseCase {
 
     if (!name) throw new MissingParamError('name')
     if (!email) throw new MissingParamError('email')
+    if (!this.validator.isEmailValid(email)) throw new InvalidParamError('email')
     if (!password) throw new MissingParamError('password')
 
     const hasUserByEmail = await this.usersRepository.findByEmail(email)

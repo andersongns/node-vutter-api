@@ -1,14 +1,16 @@
-const { UnauthorizedError, DependenceNotFoundError, MissingParamError } = require('../../utils/errors')
+const { UnauthorizedError, DependenceNotFoundError, MissingParamError, InvalidParamError } = require('../../utils/errors')
 module.exports = class AuthenticationUseCase {
-  constructor ({ usersRepository, hashGenerator, tokenJwtGenerator }) {
-    if (!usersRepository || !hashGenerator || !tokenJwtGenerator) throw new DependenceNotFoundError()
+  constructor ({ usersRepository, hashGenerator, tokenJwtGenerator, validator }) {
+    if (!usersRepository || !hashGenerator || !tokenJwtGenerator || !validator) throw new DependenceNotFoundError()
     this.usersRepository = usersRepository
     this.hashGenerator = hashGenerator
     this.tokenJwtGenerator = tokenJwtGenerator
+    this.validator = validator
   }
 
   async auth (email, password) {
     if (!email) throw new MissingParamError('email')
+    if (!this.validator.isEmailValid(email)) throw new InvalidParamError('email')
     if (!password) throw new MissingParamError('password')
 
     const user = await this.usersRepository.findByEmail(email)
