@@ -1,6 +1,4 @@
-const {
-  AuthenticationUseCase
-} = require('../../../domain/authentication')
+const { AddUserUseCase } = require('../../../domain/users')
 const { UserRepository } = require('../../../infra/db/mongodb')
 const { hashBcryptGeneratorFactory, tokenJwtGeneratorFactory } = require('../helpers')
 
@@ -11,5 +9,5 @@ const dependencies = {
 }
 
 module.exports = {
-  authenticationUseCase: new AuthenticationUseCase(dependencies)
+  addUserUseCase: new AddUserUseCase(dependencies)
 }

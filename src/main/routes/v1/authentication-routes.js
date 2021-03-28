@@ -1,4 +1,3 @@
-
 const { authenticationRouter } = require('../../factories/presentation/authentication-presentation-factory')
 const ExpressRouterAdapter = require('../../adapters/express-router-adapter')
 
