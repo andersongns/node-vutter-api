@@ -52,6 +52,12 @@ describe('Unit Users Repository ', () => {
         'password'
       ])
     })
+
+    test('Should return undefined when not found user', async () => {
+      const email = faker.internet.email()
+      const user = await UserRepository.findByEmail(email)
+      expect(user).toBeFalsy()
+    })
   })
 
   describe('Update By Id', () => {
