@@ -12,7 +12,11 @@ module.exports = class AuthenticationUseCase {
     if (!password) throw new MissingParamError('password')
 
     const user = await this.usersRepository.findByEmail(email)
-    if (user?.password !== this.hashGenerator.generate(password)) throw new UnauthorizedError()
+    if (!user?.password) throw new UnauthorizedError()
+
+    const isValid = await this.hashGenerator.verify(password, user.password)
+    if (!isValid) throw new UnauthorizedError()
+
     const token = await this.tokenJwtGenerator.generate(user.id)
     const { id, name } = user
     await this.usersRepository.updateById(id, { token })
