@@ -1,4 +1,3 @@
-require('dotenv').config({ debug: process.env.DEBUG })
 const { MongoHelper } = require('../infra/db/mongodb/helpers')
 const app = require('./config/app')
 
